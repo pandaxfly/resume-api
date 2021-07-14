@@ -14,6 +14,7 @@ client.on('error', err => {
 
 router.post('/send-message', (req, res) => {
   console.log(req.body);
+
   const requestBody = req.body;
   if (!requestBody.email) throw new Error("invalid email address");
 
@@ -27,6 +28,10 @@ router.post('/send-message', (req, res) => {
       if (err) throw err;
       console.log(reply);
     });
+
+  res.set('Access-Control-Allow-Origin', 'http://ec2-18-141-185-52.ap-southeast-1.compute.amazonaws.com');
+  res.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.set('Access-Control-Request-Headers', 'Content-Type');
 
   res.send('posted!');
 })

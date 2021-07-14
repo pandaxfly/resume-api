@@ -29,7 +29,7 @@ router.post('/send-message', (req, res) => {
       console.log(reply);
     });
 
-  res.set('Access-Control-Allow-Origin', 'http://ec2-18-141-185-52.ap-southeast-1.compute.amazonaws.com');
+  res.set('Access-Control-Allow-Origin', 'http://resume.yuehao.s3-website-ap-southeast-1.amazonaws.com/');
   res.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.set('Access-Control-Request-Headers', 'Content-Type');
 

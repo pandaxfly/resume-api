@@ -10,34 +10,38 @@ client.on('error', err => {
   console.log('Error ' + err);
 });
 
-// const cors= require('cors');
-// var corsOptions = {
-//   origin: 'http://resume.yuehao.s3-website-ap-southeast-1.amazonaws.com',
-//   methods: 'POST',
-//   optionsSuccessStatus: 200 //(IE11, various SmartTVs) choke on 204
-// }
-
-router.options('/send-message', cors(corsOptions));
-router.post('/send-message', cors(corsOptions), (req, res) => {
-  console.log(req.body);
-
+router.post('/send-message', (req, res) => {
   const requestBody = req.body;
+
   if (!requestBody.email) throw new Error("invalid email address");
-
   const userKey = `contact:${requestBody.email}`;
-
-  client.hset(userKey, 
+  const kvArray = [
     'name', requestBody.name, 
     'email', requestBody.email, 
-    'message', requestBody.message, 
-    (err, reply) => {
+    'message', requestBody.message
+  ];
+
+  client.exists(userKey, (err, reply)=> {
+    if (err) throw err;
+    if (!reply) {
+      kvArray.push(
+        'dateCreated', new Date().toISOString(),
+        'createdBy', 'FRONTEND'
+      )
+    } else {
+      kvArray.push(
+        'dateUpdated', new Date().toISOString(),
+        'updatedBy', 'FRONTEND',
+      )
+    }
+
+    client.hset(userKey, kvArray, (err, reply) => {
       if (err) throw err;
-      console.log(reply);
+      console.log(`updated ${reply} items`);
     });
-
-  res.set('Access-Control-Request-Headers', 'Content-Type');
-
-  res.send('posted!');
+    res.send('SUCCESS');
+  });
+  
 })
 
 module.exports = router;

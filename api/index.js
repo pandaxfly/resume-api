@@ -10,12 +10,12 @@ client.on('error', err => {
   console.log('Error ' + err);
 });
 
-const cors= require('cors');
-var corsOptions = {
-  origin: 'http://resume.yuehao.s3-website-ap-southeast-1.amazonaws.com',
-  methods: 'POST',
-  optionsSuccessStatus: 200 //(IE11, various SmartTVs) choke on 204
-}
+// const cors= require('cors');
+// var corsOptions = {
+//   origin: 'http://resume.yuehao.s3-website-ap-southeast-1.amazonaws.com',
+//   methods: 'POST',
+//   optionsSuccessStatus: 200 //(IE11, various SmartTVs) choke on 204
+// }
 
 router.options('/send-message', cors(corsOptions));
 router.post('/send-message', cors(corsOptions), (req, res) => {

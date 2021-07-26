@@ -15,32 +15,19 @@ router.post('/send-message', (req, res) => {
 
   if (!requestBody.email) throw new Error("invalid email address");
   const userKey = `contact:${requestBody.email}`;
+  const messageTimestamp = new Date().toISOString();
+
   const kvArray = [
     'name', requestBody.name, 
-    'email', requestBody.email, 
-    'message', requestBody.message
+    'email', requestBody.email,
+    messageTimestamp, requestBody.message,
   ];
-
-  client.exists(userKey, (err, reply)=> {
-    if (err) throw err;
-    if (!reply) {
-      kvArray.push(
-        'dateCreated', new Date().toISOString(),
-        'createdBy', 'FRONTEND'
-      )
-    } else {
-      kvArray.push(
-        'dateUpdated', new Date().toISOString(),
-        'updatedBy', 'FRONTEND',
-      )
-    }
 
     client.hset(userKey, kvArray, (err, reply) => {
       if (err) throw err;
       console.log(`updated ${reply} items`);
     });
     res.send('SUCCESS');
-  });
   
 })
 
